@@ -94,6 +94,14 @@ const App = () => {
                         setMessageClass(null)
                     }, 5000)
                 })
+                .catch(error => {
+                    setMessage(error.response.data.error)
+                    setMessageClass('error')
+                    setTimeout(() => {
+                        setMessage(null)
+                        setMessageClass(null)
+                    }, 5000)
+                })
         }
     }
 
@@ -120,7 +128,7 @@ const App = () => {
     return (
         <div>
             <h2>Puhelinluettelo</h2>
-            <Notification message={message} messageClass={messageClass}/>
+            <Notification message={message} messageClass={messageClass} />
             <Filter
                 search={search}
                 handleSearchChange={handleSearchChange}
