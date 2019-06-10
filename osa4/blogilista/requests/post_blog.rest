@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Our Healthy Lifestyle",
+    "author": "Chris & Christina Healthson",
+    "url": "https://www.ourhealthylifestyle.com/",
+    "likes": 7
+}
