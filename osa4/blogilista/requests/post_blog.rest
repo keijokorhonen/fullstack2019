@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imtrb3Job25lbiIsImlkIjoiNWQwMjVjYzkyNWQzNmU0MTU1NDk3M2NjIiwiaWF0IjoxNTYwNDQzNTg0fQ.WihQGCIjjODZr7130ET_yZPSimndRTGeSXkK8ttYZtM
 
 {
-    "title": "It's becoming harder to come up with fake blog titles and this should concern you",
-    "author": "Harry Harding",
-    "url": "https://www.superhard.com/",
-    "likes": 4
+    "title": "15 amazing tips to get you started with blogs",
+    "author": "Brianna Blogger",
+    "url": "https://www.blogguide.com/",
+    "likes": 8
 }
