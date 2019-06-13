@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imtrb3Job25lbiIsImlkIjoiNWQwMjVjYzkyNWQzNmU0MTU1NDk3M2NjIiwiaWF0IjoxNTYwNDQzNTg0fQ.WihQGCIjjODZr7130ET_yZPSimndRTGeSXkK8ttYZtM
 
 {
-    "title": "This Blog is a Test, and this is why that is important",
-    "author": "Tessa Trying",
-    "url": "https://www.testblog.com/",
-    "likes": 1
+    "title": "It's becoming harder to come up with fake blog titles and this should concern you",
+    "author": "Harry Harding",
+    "url": "https://www.superhard.com/",
+    "likes": 4
 }
