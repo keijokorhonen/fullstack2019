@@ -1,0 +1,19 @@
+.notification {
+    font-size: 20px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.error {
+    color: red;
+    border: 2px solid red;
+    background-color: lightgrey;
+}
+
+.message {
+    color: green;
+    border: 2px solid green;
+    background-color: lightgrey;
+}

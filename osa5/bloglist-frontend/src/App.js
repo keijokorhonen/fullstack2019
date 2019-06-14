@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 import './App.css';
 
 function App() {
@@ -10,6 +14,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll()
@@ -45,7 +50,11 @@ function App() {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log('wrong credentials')
+      console.log(exception.message)
+      setNotification({class: 'error', message: 'wrong username or password'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
 
@@ -54,8 +63,16 @@ function App() {
       window.localStorage.removeItem('loggedBlogappUser')
       
       setUser(null)
+
+      setNotification({class: 'message', message: 'user logged out'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (exception) {
-      console.log('logout was unsuccessful')
+      setNotification({class: 'error', message: 'logout was unsucessful'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
 
@@ -87,6 +104,7 @@ function App() {
     return (
       <div>
         <h2>Log in to Application</h2>
+        <Notification notification={notification} />
         {loginForm()}
       </div>
     )
@@ -95,13 +113,13 @@ function App() {
   return (
     <div>
       <h2>blogs</h2>
-
+      <Notification notification={notification} />
       <p>
         {`${user.name} logged in`}
         <button onClick={handleLogout()}>logout</button>
       </p>
 
-      <BlogForm blogs={blogs} setBlogs={setBlogs} />
+      <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
 
       {renderBlogs()}
     </div>
