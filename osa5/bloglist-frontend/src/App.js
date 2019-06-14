@@ -36,6 +36,7 @@ function App() {
         blog={blog}
         addLike={addLike}
         removeBlog={removeBlog}
+        user={user}
       />
     )
 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, addLike, removeBlog }) => {
+const Blog = ({ blog, addLike, removeBlog, user }) => {
   const [expanded, setExpanded] = useState(false)
 
   const showWhenExpanded = { display: expanded ? '' : 'none' }
+  const showWhenCreator = { display: blog.user.username === user.username ? '' : 'none' }
 
   const toggleExpanded = () => () => {
     setExpanded(!expanded)
@@ -35,7 +36,7 @@ const Blog = ({ blog, addLike, removeBlog }) => {
         <div>
           added by {blog.user.name}
         </div>
-        <div>
+        <div style={showWhenCreator}>
           <button onClick={handleRemove}>Remove</button>
         </div>
       </div>
