@@ -14,7 +14,7 @@ const BlogForm = ({ blogs, setBlogs, setNotification }) => {
                 author: author,
                 url: url
             }
-    
+
             const returnedBlog = await blogService.create(blogObject)
 
             setBlogs(blogs.concat(returnedBlog))
@@ -22,17 +22,17 @@ const BlogForm = ({ blogs, setBlogs, setNotification }) => {
             setAuthor('')
             setUrl('')
 
-            setNotification({class: 'message', message: `A new Blog "${blogObject.title}" by ${blogObject.author} has been added`})
+            setNotification({ class: 'message', message: `A new Blog "${blogObject.title}" by ${blogObject.author} has been added` })
             setTimeout(() => {
-              setNotification(null)
+                setNotification(null)
             }, 5000)
         } catch (exception) {
             console.log(exception)
-            setNotification({class: 'error', message: 'Blog could not be added'})
+            setNotification({ class: 'error', message: 'Blog could not be added' })
             setTimeout(() => {
-              setNotification(null)
+                setNotification(null)
             }, 5000)
-        }  
+        }
     }
 
     return (

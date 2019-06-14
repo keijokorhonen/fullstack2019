@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, addLike }) => {
   const [expanded, setExpanded] = useState(false)
 
   const showWhenExpanded = { display: expanded ? '' : 'none' }
 
   const toggleExpanded = () => () => {
     setExpanded(!expanded)
+  }
+
+  const handleLike = async () => {
+    blog.likes = blog.likes + 1
+    await addLike(blog)
   }
 
   return (
@@ -19,7 +24,7 @@ const Blog = ({ blog }) => {
           <a href={blog.url}>{blog.url}</a>
         </div>
         <div>
-          {blog.likes} likes <button>Like</button>
+          {blog.likes} likes <button onClick={handleLike}>Like</button>
         </div>
         <div>
           added by {blog.user.name}

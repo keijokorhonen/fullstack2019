@@ -32,8 +32,16 @@ function App() {
   const renderBlogs = () => blogs.map(blog =>
     <Blog key={blog.id}
       blog={blog}
+      addLike={addLike}
     />
   )
+
+  const sendNotification = (notification) => {
+    setNotification(notification)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -51,10 +59,7 @@ function App() {
       setPassword('')
     } catch (exception) {
       console.log(exception.message)
-      setNotification({class: 'error', message: 'wrong username or password'})
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      sendNotification({class: 'error', message: 'Wrong username or password'})
     }
   }
 
@@ -64,15 +69,27 @@ function App() {
       
       setUser(null)
 
-      setNotification({class: 'message', message: 'user logged out'})
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      sendNotification({class: 'message', message: 'User logged out'})
     } catch (exception) {
-      setNotification({class: 'error', message: 'logout was unsucessful'})
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      sendNotification({class: 'error', message: 'Logout was unsucessful'})
+    }
+  }
+
+  const addLike = async (blog) => {
+    try {
+      const likedBlog = {
+        user: blog.user._id,
+        likes: blog.likes + 1,
+        author: blog.author,
+        title: blog.title,
+        url: blog.url
+      }
+
+      await blogService.update(blog.id, likedBlog)
+      sendNotification({class: 'message', message: 'Liked!'})
+
+    } catch (exception) {
+      sendNotification({class: 'error', message: 'Could not like blog'})
     }
   }
 
