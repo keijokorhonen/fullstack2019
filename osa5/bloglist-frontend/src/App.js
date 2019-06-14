@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css';
@@ -39,7 +40,7 @@ function App() {
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -99,6 +100,8 @@ function App() {
         {`${user.name} logged in`}
         <button onClick={handleLogout()}>logout</button>
       </p>
+
+      <BlogForm blogs={blogs} setBlogs={setBlogs} />
 
       {renderBlogs()}
     </div>
