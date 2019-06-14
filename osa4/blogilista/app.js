@@ -21,6 +21,8 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
 
 app.use(bodyParser.json())
 app.use(middleware.tokenExtractor)
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
