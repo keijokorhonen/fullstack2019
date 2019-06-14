@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Toggleable from './components/Toggleable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
-
-import './App.css';
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -76,51 +76,34 @@ function App() {
     }
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-
   if (user === null) {
     return (
       <div>
         <h2>Log in to Application</h2>
         <Notification notification={notification} />
-        {loginForm()}
+        <LoginForm
+          handleSubmit={handleLogin}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          username={username}
+          password={password}
+        />
       </div>
     )
   }
 
   return (
     <div>
-      <h2>blogs</h2>
+      <h2>Blogs</h2>
       <Notification notification={notification} />
       <p>
-        {`${user.name} logged in`}
-        <button onClick={handleLogout()}>logout</button>
+        {`${user.name} logged in `}
+        <button onClick={handleLogout()}>Logout</button>
       </p>
-
-      <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
-
+      <Toggleable buttonLabel="New Blog">
+        <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} />
+      </Toggleable>
+      
       {renderBlogs()}
     </div>
   );
