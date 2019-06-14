@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, addLike }) => {
+const Blog = ({ blog, addLike, removeBlog }) => {
   const [expanded, setExpanded] = useState(false)
 
   const showWhenExpanded = { display: expanded ? '' : 'none' }
@@ -9,9 +9,15 @@ const Blog = ({ blog, addLike }) => {
     setExpanded(!expanded)
   }
 
-  const handleLike = async () => {
+  const handleLike = async (event) => {
+    event.preventDefault()
     blog.likes = blog.likes + 1
     await addLike(blog)
+  }
+
+  const handleRemove = async (event) => {
+    event.preventDefault()
+    await removeBlog(blog)
   }
 
   return (
@@ -28,6 +34,9 @@ const Blog = ({ blog, addLike }) => {
         </div>
         <div>
           added by {blog.user.name}
+        </div>
+        <div>
+          <button onClick={handleRemove}>Remove</button>
         </div>
       </div>
 

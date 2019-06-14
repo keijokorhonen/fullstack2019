@@ -26,6 +26,7 @@ function App() {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -34,6 +35,7 @@ function App() {
       <Blog key={blog.id}
         blog={blog}
         addLike={addLike}
+        removeBlog={removeBlog}
       />
     )
 
@@ -72,7 +74,21 @@ function App() {
 
       sendNotification({class: 'message', message: 'User logged out'})
     } catch (exception) {
+      console.log(exception.message)
       sendNotification({class: 'error', message: 'Logout was unsucessful'})
+    }
+  }
+
+  const addBlog = async (blog) => {
+    try {
+      const returnedBlog = await blogService.create(blog)
+
+      setBlogs(blogs.concat(returnedBlog))
+
+      sendNotification({ class: 'message', message: `A new Blog "${returnedBlog.title}" by ${returnedBlog.author} has been added` })
+    } catch (exception) {
+      console.log(exception.message)
+      sendNotification({ class: 'error', message: 'Blog could not be added' })
     }
   }
 
@@ -91,6 +107,18 @@ function App() {
 
     } catch (exception) {
       sendNotification({class: 'error', message: 'Could not like blog'})
+    }
+  }
+
+  const removeBlog = async (blog) => {
+    if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+        sendNotification({ class: 'message', message: 'Blog removed!' })
+      } catch (exception) {
+        sendNotification({ class: 'error', message: 'Blog could not be removed' })
+      }
     }
   }
 
@@ -119,7 +147,7 @@ function App() {
         <button onClick={handleLogout()}>Logout</button>
       </p>
       <Toggleable buttonLabel="New Blog">
-        <BlogForm blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} />
+        <BlogForm addBlog={addBlog} />
       </Toggleable>
       
       {renderBlogs()}
