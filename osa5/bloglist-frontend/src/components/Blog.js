@@ -28,13 +28,13 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
                 {blog.title} by {blog.author}
             </div>
             <div style={showWhenExpanded}>
-                <div>
+                <div className="blogUrl">
                     <a href={blog.url}>{blog.url}</a>
                 </div>
-                <div>
+                <div className="blogLikes">
                     {blog.likes} likes <button onClick={handleLike}>Like</button>
                 </div>
-                <div>
+                <div className="blogUser">
                     added by {blog.user.name}
                 </div>
                 <div style={showWhenCreator}>
