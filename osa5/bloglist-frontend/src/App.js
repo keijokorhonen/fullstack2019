@@ -9,12 +9,15 @@ import Toggleable from './components/Toggleable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { useField } from './hooks'
+
 function App() {
     const [blogs, setBlogs] = useState([])
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
     const [notification, setNotification] = useState(null)
+
+    const username = useField('text')
+    const password = useField('password')
 
     useEffect(() => {
         blogService.getAll()
@@ -51,7 +54,8 @@ function App() {
         event.preventDefault()
         try {
             const user = await loginService.login({
-                username, password
+                username: username.value,
+                password: password.value
             })
 
             window.localStorage.setItem(
@@ -59,8 +63,8 @@ function App() {
             )
             blogService.setToken(user.token)
             setUser(user)
-            setUsername('')
-            setPassword('')
+            // setUsername('')
+            // setPassword('')
         } catch (exception) {
             console.log(exception.message)
             sendNotification({ class: 'error', message: 'Wrong username or password' })
@@ -130,8 +134,6 @@ function App() {
                 <Notification notification={notification} />
                 <LoginForm
                     handleSubmit={handleLogin}
-                    handleUsernameChange={({ target }) => setUsername(target.value)}
-                    handlePasswordChange={({ target }) => setPassword(target.value)}
                     username={username}
                     password={password}
                 />
