@@ -54,8 +54,8 @@ function App() {
         event.preventDefault()
         try {
             const user = await loginService.login({
-                username: username.value,
-                password: password.value
+                username: username.props().value,
+                password: password.props().value
             })
 
             window.localStorage.setItem(
@@ -63,8 +63,8 @@ function App() {
             )
             blogService.setToken(user.token)
             setUser(user)
-            // setUsername('')
-            // setPassword('')
+            username.reset()
+            password.reset()
         } catch (exception) {
             console.log(exception.message)
             sendNotification({ class: 'error', message: 'Wrong username or password' })
@@ -134,8 +134,8 @@ function App() {
                 <Notification notification={notification} />
                 <LoginForm
                     handleSubmit={handleLogin}
-                    username={username}
-                    password={password}
+                    username={username.props()}
+                    password={password.props()}
                 />
             </div>
         )
