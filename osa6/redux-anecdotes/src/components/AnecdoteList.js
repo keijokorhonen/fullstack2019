@@ -2,16 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-import { showNotification, hideNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = (props) => {
     const vote = (id) => {
-        console.log('vote', id)
         props.voteAnecdote(id)
-        props.showNotification(`You voted for: ${props.anecdotesToShow.find(a => a.id === id).content}`)
-        setTimeout(() => {
-            props.hideNotification()
-        }, 5000)
+        props.setNotification(`You voted for: ${props.anecdotesToShow.find(a => a.id === id).content}`, 5)
     }
 
     return (
@@ -43,7 +39,6 @@ const anecdotesToShow = ({ anecdotes, filter }) => {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         anecdotesToShow: anecdotesToShow(state)
     }
@@ -51,7 +46,7 @@ const mapStateToProps = (state) => {
 
 const ConnectedAnecdotes = connect(
     mapStateToProps,
-    { voteAnecdote, showNotification, hideNotification }
+    { voteAnecdote, setNotification }
 )(AnecdoteList)
 
 export default ConnectedAnecdotes
