@@ -1,6 +1,6 @@
 const initialState = null
 
-const noteReducer = (state = initialState, action) => {
+const notificationReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SHOW_NOTIFICATION':
             return action.data.notification
@@ -25,4 +25,4 @@ export const hideNotification = () => {
 }
 
 
-export default noteReducer
+export default notificationReducer
