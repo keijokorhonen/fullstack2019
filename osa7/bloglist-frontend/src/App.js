@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import BlogList from './components/BlogList'
@@ -7,31 +7,30 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
 
-import blogService from './services/blogs'
 import loginService from './services/login'
 
 import { useField } from './hooks'
 
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { loginUser, logoutUser } from './reducers/userReducer'
 
-function App (props) {
-    const [user, setUser] = useState(null)
-
+function App(props) {
     const username = useField('text')
     const password = useField('password')
 
     useEffect(() => {
         props.initializeBlogs()
-    }, [props])
+        // eslint-disable-next-line
+    }, [])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
-            setUser(user)
-            blogService.setToken(user.token)
+            props.loginUser(user)
         }
+        // eslint-disable-next-line
     }, [])
 
     const handleLogin = async (event) => {
@@ -45,8 +44,7 @@ function App (props) {
             window.localStorage.setItem(
                 'loggedBlogappUser', JSON.stringify(user)
             )
-            blogService.setToken(user.token)
-            setUser(user)
+            props.loginUser(user)
             username.reset()
             password.reset()
         } catch (exception) {
@@ -59,8 +57,7 @@ function App (props) {
         try {
             window.localStorage.removeItem('loggedBlogappUser')
 
-            setUser(null)
-
+            props.logoutUser(null)
             props.setNotification('User logged out', 'message', 5)
         } catch (exception) {
             console.log(exception.message)
@@ -68,7 +65,8 @@ function App (props) {
         }
     }
 
-    if (user === null) {
+
+    if (props.user === null) {
         return (
             <div>
                 <h2>Log in to Application</h2>
@@ -87,16 +85,22 @@ function App (props) {
             <h2>Blogs</h2>
             <Notification />
             <p>
-                {`${user.name} logged in `}
+                {`${props.user.name} logged in `}
                 <button onClick={handleLogout()}>Logout</button>
             </p>
             <Toggleable buttonLabel="New Blog">
                 <BlogForm />
             </Toggleable>
 
-            <BlogList user={user} />
+            <BlogList />
         </div>
     )
 }
 
-export default connect(null, { initializeBlogs, setNotification })(App)
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    }
+}
+
+export default connect(mapStateToProps, { initializeBlogs, setNotification, loginUser, logoutUser })(App)

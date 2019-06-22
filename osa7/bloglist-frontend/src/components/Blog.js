@@ -71,12 +71,18 @@ const Blog = (props) => {
     )
 }
 
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    }
+}
+
 const mapDispatchToProps = {
     likeBlog,
     removeBlog,
     setNotification
 }
 
-const ConnectedBlog = connect(null, mapDispatchToProps)(Blog)
+const ConnectedBlog = connect(mapStateToProps, mapDispatchToProps)(Blog)
 
 export default ConnectedBlog

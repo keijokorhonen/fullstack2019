@@ -4,13 +4,11 @@ import { connect } from 'react-redux'
 import Blog from './Blog'
 
 const BlogList = (props) => {
-
     return (
         props.blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
             .map(blog =>
                 <Blog key={blog.id}
                     blog={blog}
-                    user={props.user}
                 />
             )
     )
