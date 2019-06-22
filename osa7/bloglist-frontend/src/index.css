@@ -1,0 +1,36 @@
+button {
+    cursor: pointer;
+}
+
+.notification {
+    font-size: 20px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.error {
+    color: red;
+    border: 2px solid red;
+    background-color: lightgrey;
+}
+
+.message {
+    color: green;
+    border: 2px solid green;
+    background-color: lightgrey;
+}
+
+.blog {
+    display: table;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px solid black;
+}
+
+.blogTitleButton {
+    cursor: pointer;
+    font-size: 18px;
+}
