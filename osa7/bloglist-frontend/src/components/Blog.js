@@ -1,21 +1,17 @@
-import React, { useState } from 'react'
-
+import React from 'react'
 import { connect } from 'react-redux'
 
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = (props) => {
-    const blog = props.blog
+    const blog = props.blogs.find(b => b.id === props.id)
 
-    const [expanded, setExpanded] = useState(false)
-
-    const showWhenExpanded = { display: expanded ? '' : 'none' }
-    const showWhenCreator = { display: blog.user.username === props.user.username ? '' : 'none' }
-
-    const toggleExpanded = () => () => {
-        setExpanded(!expanded)
+    if (!blog) {
+        return null
     }
+
+    const showWhenCreator = { display: blog.user.username === props.user.username ? '' : 'none' }
 
     const handleLike = async (event) => {
         event.preventDefault()
@@ -48,32 +44,30 @@ const Blog = (props) => {
     }
 
     return (
-        <div className="blog">
-            <div onClick={toggleExpanded()} className="blogTitleButton">
-                {blog.title} by {blog.author}
+        <div>
+            <h2>
+                {blog.title} {blog.author}
+            </h2>
+            <div className="blogUrl">
+                <a href={blog.url}>{blog.url}</a>
             </div>
-            <div style={showWhenExpanded}>
-                <div className="blogUrl">
-                    <a href={blog.url}>{blog.url}</a>
-                </div>
-                <div className="blogLikes">
-                    {blog.likes} likes <button onClick={handleLike}>Like</button>
-                </div>
-                <div className="blogUser">
-                    added by {blog.user.name}
-                </div>
-                <div style={showWhenCreator}>
-                    <button onClick={handleRemove}>Remove</button>
-                </div>
+            <div className="blogLikes">
+                {blog.likes} likes <button onClick={handleLike}>Like</button>
             </div>
-
+            <div className="blogUser">
+                added by {blog.user.name}
+            </div>
+            <div style={showWhenCreator}>
+                <button onClick={handleRemove}>Remove</button>
+            </div>
         </div>
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.user,
+        blogs: state.blogs
     }
 }
 

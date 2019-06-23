@@ -1,15 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-import Blog from './Blog'
+import { Link } from 'react-router-dom'
 
 const BlogList = (props) => {
     return (
         props.blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
             .map(blog =>
-                <Blog key={blog.id}
-                    blog={blog}
-                />
+                <div key={blog.id} className="blog blogTitleButton">
+                    <Link to={`/blogs/${blog.id}`}>
+                        {blog.title} by {blog.author}
+                    </Link>
+                </div>
+
             )
     )
 }

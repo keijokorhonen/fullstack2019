@@ -1,17 +1,25 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import {
+    BrowserRouter as Router,
+    Route, Link, Redirect, withRouter
+} from 'react-router-dom'
 
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
+import Users from './components/Users'
+import User from './components/User'
+import Blog from './components/Blog'
 
 import { useField } from './hooks'
 
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, loginUser, logoutUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 
 function App(props) {
     const usernameField = useField('text')
@@ -24,6 +32,11 @@ function App(props) {
 
     useEffect(() => {
         props.initializeUser()
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        props.initializeUsers()
         // eslint-disable-next-line
     }, [])
 
@@ -49,20 +62,38 @@ function App(props) {
 
     return (
         <div>
-            <h2>Blogs</h2>
-            <Notification />
-            <p>
-                {`${props.user.name} logged in `}
-                <button onClick={handleLogout}>Logout</button>
-            </p>
-            <Toggleable buttonLabel="New Blog">
-                <BlogForm />
-            </Toggleable>
+            <Router>
+                <div>
+                    <Link to="/">Blogs</Link>
+                    <Link to="/users">Users</Link>
 
-            <BlogList />
+                    {`${props.user.name} logged in `}
+                    <button onClick={handleLogout}>Logout</button>
+
+                </div>
+                <h2>Blogs</h2>
+                <Notification />
+                <Route exact path="/" render={() => <Home />} />
+                <Route exact path="/users" render={() => <Users />} />
+                <Route path="/users/:id" render={({ match }) =>
+                    <User id={match.params.id} />
+                } />
+                <Route path="/blogs/:id" render={({ match }) =>
+                    <Blog id={match.params.id} />
+                } />
+            </Router>
         </div>
     )
 }
+
+const Home = () => (
+    <div>
+        <Toggleable buttonLabel="New Blog">
+            <BlogForm />
+        </Toggleable>
+        <BlogList />
+    </div>
+)
 
 const mapStateToProps = (state) => {
     return {
@@ -70,4 +101,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { initializeBlogs, setNotification, initializeUser, loginUser, logoutUser })(App)
+export default connect(mapStateToProps, { initializeBlogs, setNotification, initializeUser, loginUser, logoutUser, initializeUsers })(App)

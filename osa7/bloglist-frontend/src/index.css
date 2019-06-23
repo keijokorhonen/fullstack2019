@@ -34,3 +34,16 @@ button {
     cursor: pointer;
     font-size: 18px;
 }
+
+.users {
+    display: grid;
+    grid-template-columns: 200px 200px;
+}
+
+.user {
+    display: contents;
+}
+
+.userBlogCount, .username {
+    display: inline-block;
+}
