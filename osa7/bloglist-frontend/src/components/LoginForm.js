@@ -1,21 +1,35 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
-const LoginForm = ({
-    handleSubmit,
-    username,
-    password
-}) => {
+import { loginUser } from '../reducers/userReducer'
+import { setNotification } from '../reducers/notificationReducer'
+
+const LoginForm = (props) => {
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        try {
+            const username = props.usernameField.props().value
+            const password = props.passwordField.props().value
+
+            await props.loginUser(username, password)
+            props.usernameField.reset()
+            props.passwordField.reset()
+        } catch (exception) {
+            console.log(exception.message)
+            props.setNotification('Wrong username or password', 'error', 5)
+        }
+    }
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <div>
                     Username&nbsp;
-                    <input {...username} />
+                    <input {...props.usernameField.props()} />
                 </div>
                 <div>
                     Password&nbsp;
-                    <input {...password} />
+                    <input {...props.passwordField.props()} />
                 </div>
                 <button type="submit">Login</button>
             </form>
@@ -23,10 +37,4 @@ const LoginForm = ({
     )
 }
 
-LoginForm.propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
-    username: PropTypes.object.isRequired,
-    password: PropTypes.object.isRequired
-}
-
-export default LoginForm
+export default connect(null, { loginUser, setNotification })(LoginForm)

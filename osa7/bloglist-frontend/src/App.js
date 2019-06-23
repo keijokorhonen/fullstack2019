@@ -7,17 +7,15 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
 
-import loginService from './services/login'
-
 import { useField } from './hooks'
 
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { loginUser, logoutUser } from './reducers/userReducer'
+import { initializeUser, loginUser, logoutUser } from './reducers/userReducer'
 
 function App(props) {
-    const username = useField('text')
-    const password = useField('password')
+    const usernameField = useField('text')
+    const passwordField = useField('password')
 
     useEffect(() => {
         props.initializeBlogs()
@@ -25,39 +23,13 @@ function App(props) {
     }, [])
 
     useEffect(() => {
-        const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-        if (loggedUserJSON) {
-            const user = JSON.parse(loggedUserJSON)
-            props.loginUser(user)
-        }
+        props.initializeUser()
         // eslint-disable-next-line
     }, [])
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
+    const handleLogout = async () => {
         try {
-            const user = await loginService.login({
-                username: username.props().value,
-                password: password.props().value
-            })
-
-            window.localStorage.setItem(
-                'loggedBlogappUser', JSON.stringify(user)
-            )
-            props.loginUser(user)
-            username.reset()
-            password.reset()
-        } catch (exception) {
-            console.log(exception.message)
-            props.setNotification('Wrong username or password', 'error', 5)
-        }
-    }
-
-    const handleLogout = () => () => {
-        try {
-            window.localStorage.removeItem('loggedBlogappUser')
-
-            props.logoutUser(null)
+            await props.logoutUser(null)
             props.setNotification('User logged out', 'message', 5)
         } catch (exception) {
             console.log(exception.message)
@@ -65,17 +37,12 @@ function App(props) {
         }
     }
 
-
     if (props.user === null) {
         return (
             <div>
                 <h2>Log in to Application</h2>
                 <Notification />
-                <LoginForm
-                    handleSubmit={handleLogin}
-                    username={username.props()}
-                    password={password.props()}
-                />
+                <LoginForm usernameField={usernameField} passwordField={passwordField} />
             </div>
         )
     }
@@ -86,7 +53,7 @@ function App(props) {
             <Notification />
             <p>
                 {`${props.user.name} logged in `}
-                <button onClick={handleLogout()}>Logout</button>
+                <button onClick={handleLogout}>Logout</button>
             </p>
             <Toggleable buttonLabel="New Blog">
                 <BlogForm />
@@ -103,4 +70,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { initializeBlogs, setNotification, loginUser, logoutUser })(App)
+export default connect(mapStateToProps, { initializeBlogs, setNotification, initializeUser, loginUser, logoutUser })(App)
