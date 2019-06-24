@@ -16,13 +16,7 @@ const Blog = (props) => {
     const handleLike = async (event) => {
         event.preventDefault()
         try {
-            const likedBlog = {
-                user: blog.user._id,
-                likes: blog.likes + 1,
-                author: blog.author,
-                title: blog.title,
-                url: blog.url
-            }
+            const likedBlog = { ...blog, likes: blog.likes + 1 }
 
             await props.likeBlog(blog.id, likedBlog)
             props.setNotification('Liked!', 'message', 5)
@@ -59,6 +53,13 @@ const Blog = (props) => {
             </div>
             <div style={showWhenCreator}>
                 <button onClick={handleRemove}>Remove</button>
+            </div>
+            <div>
+                <h3>comments</h3>
+                <ul>
+                    {blog.comments.map((c, i) =>
+                        <li key={i}>{c}</li>)}
+                </ul>
             </div>
         </div>
     )

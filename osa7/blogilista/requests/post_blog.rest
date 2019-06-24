@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imtrb3Job25lbiIsImlkIjoiNWQwMjVjYzkyNWQzNmU0MTU1NDk3M2NjIiwiaWF0IjoxNTYwNDQzNTg0fQ.WihQGCIjjODZr7130ET_yZPSimndRTGeSXkK8ttYZtM
+
+{
+    "title": "15 amazing tips to get you started with blogs",
+    "author": "Brianna Blogger",
+    "url": "https://www.blogguide.com/",
+    "likes": 8
+}
