@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
-import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog, commentBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = (props) => {
+    const [comment, setComment] = useState('')
     const blog = props.blogs.find(b => b.id === props.id)
 
     if (!blog) {
@@ -32,8 +33,19 @@ const Blog = (props) => {
                 await props.removeBlog(blog.id)
                 props.setNotification('Blog removed!', 'message', 5)
             } catch (exception) {
-                props.sendNotification('Blog could not be removed', 'error', 5)
+                props.setNotification('Blog could not be removed', 'error', 5)
             }
+        }
+    }
+
+    const handleComment = async (event) => {
+        event.preventDefault()
+        try {
+            await props.commentBlog(blog.id, comment)
+            setComment('')
+            props.setNotification('Commented!', 'message', 5)
+        } catch (exception) {
+            props.setNotification('Could not comment', 'error', 5)
         }
     }
 
@@ -56,6 +68,13 @@ const Blog = (props) => {
             </div>
             <div>
                 <h3>comments</h3>
+                <form onSubmit={handleComment}>
+                    <input
+                        value={comment}
+                        onChange={({ target }) => setComment(target.value)}
+                    />
+                    <button type="submit">Comment</button>
+                </form>
                 <ul>
                     {blog.comments.map((c, i) =>
                         <li key={i}>{c}</li>)}
@@ -75,7 +94,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     likeBlog,
     removeBlog,
-    setNotification
+    setNotification,
+    commentBlog
 }
 
 const ConnectedBlog = connect(mapStateToProps, mapDispatchToProps)(Blog)
