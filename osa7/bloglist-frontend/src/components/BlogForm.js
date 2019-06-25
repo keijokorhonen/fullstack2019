@@ -1,8 +1,32 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import { createBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
+
+const Input = styled.input`
+    padding: 1em;
+    margin: 0.5em;
+    color: #000000;
+    background: #d5ddea;
+    border: none;
+    border-radius: 3px;
+`
+
+const Button = styled.button`
+    background: #368785;
+    border-radius: 3px;
+    padding: 1em;
+    color: #ffffff;
+    border: none;
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+    &:hover {
+            background-color: #26605f;
+    }
+`
 
 const BlogForm = (props) => {
     const [title, setTitle] = useState('')
@@ -33,27 +57,27 @@ const BlogForm = (props) => {
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                Title:&nbsp;
-                <input
+                <label>Title:</label>
+                <Input
                     value={title}
                     onChange={({ target }) => setTitle(target.value)}
                 />
             </div>
             <div>
-                Author:&nbsp;
-                <input
+                <label>Author:</label>
+                <Input
                     value={author}
                     onChange={({ target }) => setAuthor(target.value)}
                 />
             </div>
             <div>
-                Url:&nbsp;
-                <input
+                <label>Url:</label>
+                <Input
                     value={url}
                     onChange={({ target }) => setUrl(target.value)}
                 />
             </div>
-            <button type="submit">Create</button>
+            <Button type="submit">Create</Button>
         </form>
     )
 }
