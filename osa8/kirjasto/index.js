@@ -51,7 +51,8 @@ const typeDefs = gql`
         authorCount: Int!
         allBooks(author: String, genre: String): [Book!]!
         allAuthors: [Author!]!
-        me: User
+        me: User,
+        allGenres: [String!]!
     }
 
     type Mutation {
@@ -81,37 +82,44 @@ const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
-        allBooks: (root, args) => {
-            if (!args.author && !args.genre) {
-                return Book.find({})
-            }
+        allBooks: async (root, args) => {
+            let books = await Book.find({}).populate('author')
 
-            if (args.author && args.genre) {
-                return Book.find({ 'author.name': args.author, genres: { $in: [args.genre] } })
+            if (args.author) {
+                books = books.filter(b => b.author.name === args.author)
             }
 
             if (args.genre) {
-                return Book.find({ genres: { $in: [args.genre] } })
+                books = books.filter(b => b.genres.some(g => g === args.genre))
             }
 
-            return Book.find({ 'author.name': args.author })
+            return books
         },
         allAuthors: () => Author.find({}),
         me: (root, args, context) => {
             return context.currentUser
+        },
+        allGenres: async () => {
+            const books = await Book.find({})
+            let genres = books.map(b => b.genres)
+            genres = [].concat.apply([], genres)
+            genres = [...new Set(genres)]
+            
+            return genres
         }
     },
     Book: {
         author: (root) => {
             return {
-                name: root.authorName,
-                born: root.authorBorn
+                name: root.author.name,
+                born: root.author.born
             }
         }
     },
     Author: {
-        bookCount: (root) => {
-            return books.filter((book) => book.author === root.name).length
+        bookCount: async (root) => {
+            const books = await Book.find({}).populate('author')
+            return books.filter(b => b.author.id === root.id).length
         }
     },
     Mutation: {
@@ -120,8 +128,10 @@ const resolvers = {
                 throw new AuthenticationError("not authenticated")
             }
 
-            if (await Author.findOne({ name: args.authorName })) {
-                const newAuthor = new Author({ name: args.authorName })
+            let newAuthor = await Author.findOne({ name: args.authorName })
+
+            if (!newAuthor) {
+                newAuthor = new Author({ name: args.authorName })
                 try {
                     await newAuthor.save()
                 } catch (error) {
@@ -131,7 +141,7 @@ const resolvers = {
                 }
             }
 
-            const book = new Book({ ...args })
+            const book = new Book({ ...args, author: newAuthor })
 
             try {
                 await book.save()
