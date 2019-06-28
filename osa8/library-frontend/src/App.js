@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import Recommend from './components/Recommend'
 import { gql } from 'apollo-boost'
 import { useApolloClient, useQuery, useMutation } from 'react-apollo-hooks'
+import { Subscription } from 'react-apollo'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -48,6 +49,15 @@ const App = () => {
 
   return (
     <div>
+      <Subscription
+        subscription={BOOK_ADDED}
+        onSubscriptionData={({ subscriptionData }) => {
+          console.log(subscriptionData)
+          window.alert(`${subscriptionData.data.bookAdded.title} added`)
+        }}
+      >
+        {() => null}
+      </Subscription>
       {errorMessage &&
         <div style={{ color: 'red' }}>
           {errorMessage}
@@ -139,6 +149,19 @@ const LOGIN = gql`
       value
     }
   }
+`
+
+const BOOK_ADDED = gql`
+subscription {
+  bookAdded {
+    title
+    published
+    author {
+      name
+    }
+    genres
+  }
+}
 `
 
 export default App
